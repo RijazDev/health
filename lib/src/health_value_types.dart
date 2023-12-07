@@ -136,20 +136,21 @@ class WorkoutHealthValue extends HealthValue {
 
   factory WorkoutHealthValue.fromJson(json) {
     return WorkoutHealthValue(
-        HealthWorkoutActivityType.values.firstWhere(
-            (element) => element.name == json['workoutActivityType']),
+        HealthWorkoutActivityType.values.firstWhereOrNull(
+                (element) => element.name == json['workoutActivityType']) ??
+            HealthWorkoutActivityType.WALKING,
         json['totalEnergyBurned'] != null
             ? (json['totalEnergyBurned'] as num).toInt()
             : null,
         json['totalEnergyBurnedUnit'] != null
-            ? HealthDataUnit.values.firstWhere(
+            ? HealthDataUnit.values.firstWhereOrNull(
                 (element) => element.name == json['totalEnergyBurnedUnit'])
             : null,
         json['totalDistance'] != null
             ? (json['totalDistance'] as num).toInt()
             : null,
         json['totalDistanceUnit'] != null
-            ? HealthDataUnit.values.firstWhere(
+            ? HealthDataUnit.values.firstWhereOrNull(
                 (element) => element.name == json['totalDistanceUnit'])
             : null);
   }
@@ -223,7 +224,8 @@ class ElectrocardiogramHealthValue extends HealthValue {
         averageHeartRate: json['averageHeartRate'],
         samplingFrequency: json['samplingFrequency'],
         classification: ElectrocardiogramClassification.values
-            .firstWhere((c) => c.value == json['classification']),
+                .firstWhereOrNull((c) => c.value == json['classification']) ??
+            ElectrocardiogramClassification.ATRIAL_FIBRILLATION,
       );
 
   Map<String, dynamic> toJson() => {
