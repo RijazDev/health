@@ -1,6 +1,6 @@
 part of health;
 
-extension ListExtension<T> on List<T> {
+extension FirstWhereExt<T> on List<T> {
   /// The first element satisfying [test], or `null` if there are none.
   T? firstWhereOrNull(bool Function(T element) test) {
     for (var element in this) {
