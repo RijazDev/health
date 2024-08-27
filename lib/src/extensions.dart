@@ -1,4 +1,4 @@
-part of health;
+part of '../health.dart';
 
 extension FirstWhereExt<T> on List<T> {
   /// The first element satisfying [test], or `null` if there are none.
