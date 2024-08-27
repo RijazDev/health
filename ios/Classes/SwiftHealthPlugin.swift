@@ -953,10 +953,11 @@ public class SwiftHealthPlugin: NSObject, FlutterPlugin {
         let sampleType = HKQuantityType.quantityType(forIdentifier: .stepCount)!
         let predicate = HKQuery.predicateForSamples(
             withStart: dateFrom, end: dateTo, options: .strictStartDate)
+        let compoundPredicate = NSCompoundPredicate(andPredicateWithSubpredicates: [.init(format: "metadata.%K != YES", HKMetadataKeyWasUserEntered), predicate])
 
         let query = HKStatisticsQuery(
             quantityType: sampleType,
-            quantitySamplePredicate: predicate,
+            quantitySamplePredicate: compoundPredicate,
             options: .cumulativeSum
         ) { query, queryResult, error in
 
