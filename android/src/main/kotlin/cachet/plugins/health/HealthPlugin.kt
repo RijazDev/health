@@ -75,6 +75,7 @@ class HealthPlugin(private var channel: MethodChannel? = null) :
                         null
         private lateinit var healthConnectClient: HealthConnectClient
         private lateinit var scope: CoroutineScope
+        private var isReplySubmitted = false
 
         private var BODY_FAT_PERCENTAGE = "BODY_FAT_PERCENTAGE"
         private var HEIGHT = "HEIGHT"
@@ -548,13 +549,19 @@ class HealthPlugin(private var channel: MethodChannel? = null) :
         }
 
         private fun onHealthConnectPermissionCallback(permissionGranted: Set<String>) {
-                if (permissionGranted.isEmpty()) {
+                if (!isReplySubmitted) {
+                  if (permissionGranted.isEmpty()) {
                         mResult?.success(false)
-                        Log.i("FLUTTER_HEALTH", "Access Denied (to Health Connect)!")
-                } else {
+                        Log.i("FLUTTER_HEALTH", "Health Connect permissions were not granted! Make sure to declare the required permissions in the AndroidManifest.xml file.")
+                  } else {
                         mResult?.success(true)
-                        Log.i("FLUTTER_HEALTH", "Access Granted (to Health Connect)!")
-                }
+                        Log.i("FLUTTER_HEALTH", "${permissionGranted.size} Health Connect permissions were granted!")
+
+                        // log the permissions granted for debugging
+                        Log.i("FLUTTER_HEALTH", "Permissions granted: $permissionGranted") 
+                  }
+                  isReplySubmitted = true
+                }                
         }
 
         private fun keyToHealthDataType(type: String): DataType {
@@ -2623,7 +2630,7 @@ class HealthPlugin(private var channel: MethodChannel? = null) :
                         Log.i("FLUTTER_HEALTH", "Permission launcher not found")
                         return
                 }
-
+                isReplySubmitted = false
                 healthConnectRequestPermissionsLauncher!!.launch(permList.toSet())
         }
 
